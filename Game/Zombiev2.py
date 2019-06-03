@@ -8,7 +8,8 @@ SCREEN = "Main Menu"
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-tile_img = arcade.load_texture('/home/robuntu/Hosseini/untitled/download.jpeg')
+#Change file path to appropriate one
+tile_img = arcade.load_texture('Assets/download.jpeg')
 
 
 def setup():

@@ -5,6 +5,12 @@ WIDTH = 1300
 HEIGHT = 700
 SCREEN = "Main Menu"
 
+file_path = os.path.dirname(os.path.abspath(__file__))
+os.chdir(file_path)
+
+#Change file path to appropriate one
+tile_img = arcade.load_texture('D:\Programs\cpt-amin-and-danny-master\Assets\download.jpeg')
+
 
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "My Arcade Game")
@@ -56,16 +62,12 @@ class Background(object):
         self.whole_map_y = -1 * HEIGHT
         self.whole_map_width = WIDTH * 3
         self.whole_map_length = HEIGHT * 3
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(file_path)
-        #Change file path to appropriate one
-        self.tile_img = arcade.load_texture('D:\Programs\cpt-amin-and-danny-master\Assets\download.jpeg')
 
     def draw_background(self):
         # TILES
         for x in range(self.whole_map_x, self.whole_map_x + self.whole_map_width, tile_img.width):
             for y in range(self.whole_map_y, self.whole_map_y + self.whole_map_length, tile_img.height):
-                arcade.draw_xywh_rectangle_textured(x, y, self.tile_img.width, self.tile_img.height, self.tile_img)
+                arcade.draw_xywh_rectangle_textured(x, y, tile_img.width, tile_img.height, tile_img)
         # TREES
         # BUILDING
 
@@ -98,62 +100,58 @@ class Player(object):
         self.x += self.change_x
         self.y += self.change_y
         
-class MyGame(arcade.Window):
-    def __init__(self, width, height, title):
-        super().__init__(width, height, title)
-        self.character = Player(400, 125, 20, 0, 0)
-        self.main_screen = MainScreen()
-        self.game = Background()
 
-
-    def update(self, delta_time):
-        self.character.update()
-        print(self.character.change_x)
+character = Player(400, 125, 20, 0, 0)
+def update(delta_time):
+    character.update
+    print(getattr(character, 'change_y'))
     
 
-    def on_draw(self):
-        arcade.start_render()
-        # Draw in here...
-        if SCREEN == "Main Menu":
-            arcade.set_background_color(arcade.color.WHITE)
-            self.main_screen.draw_main_screen()
-        elif SCREEN == "Game":
-            # game.draw_background()
-            self.character.draw_player()
+
+def on_draw():
+    arcade.start_render()
+    # Draw in here...
+    if SCREEN == "Main Menu":
+        arcade.set_background_color(arcade.color.WHITE)
+        main_screen = MainScreen()
+        main_screen.draw_main_screen()
+    elif SCREEN == "Game":
+        # game = Background()
+        # game.draw_background()
+        character.draw_player()
 
 
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.W: 
-            self.character.change_y = 5
-        elif key == arcade.key.A: 
-            self.character.change_x = -5
-        elif key == arcade.key.D:
-            self.character.change_x = 5
-        elif key == arcade.key.S:
-            self.character.change_y = -5
+
+def on_key_press(key, modifiers):
+    global character
+    if key == arcade.key.W: 
+        setattr(character, 'change_y', 5)
+    elif key == arcade.key.A: 
+        setattr(character, 'change_x', -5)
+    elif key == arcade.key.D:
+        setattr(character, 'change_x', 5)
+    elif key == arcade.key.S:
+        setattr(character, 'change_y', -5)
 
 
-    def on_key_release(self, key, modifiers):
-        if SCREEN == "Main Menu":
-            if key == arcade.key.ENTER:
-                SCREEN = "Game"
-        elif SCREEN == "Game":
-            if key == arcade.key.ESCAPE:
-                SCREEN = "Main Menu"
+def on_key_release(key, modifiers):
+    global SCREEN, character
+    if SCREEN == "Main Menu":
+        if key == arcade.key.ENTER:
+            SCREEN = "Game"
+    elif SCREEN == "Game":
+        if key == arcade.key.ESCAPE:
+            SCREEN = "Main Menu"
     
-        if key == arcade.key.W or arcade.key.S:
-            self.character.change_y = 0
-        elif key == arcade.key.A or arcade.key.D:
-            self.character.change_x = 0
+    if key == arcade.key.W or arcade.key.S:
+        setattr(character, 'change_y', 0)
+    elif key == arcade.key.A arcade.key.D:
+        setattr(character, 'change_x', 0)
 
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        pass 
 
-
-def main():
-    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    arcade.run()
+def on_mouse_press(x, y, button, modifiers):
+    pass
 
 
 if __name__ == '__main__':

@@ -110,7 +110,7 @@ character = Player(400, 125, 20, 0, 0)
 
 def update(delta_time):
     character.update()
-    print(getattr(character, 'change_y'))
+    print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
 
 
 def on_draw():
@@ -147,10 +147,14 @@ def on_key_release(key, modifiers):
         if key == arcade.key.ESCAPE:
             SCREEN = "Main Menu"
 
-    if key == arcade.key.W or arcade.key.S:
+    if key == arcade.key.W:
         setattr(character, 'change_y', 0)
-    elif key == arcade.key.A or arcade.key.D:
+    if key == arcade.key.A:
         setattr(character, 'change_x', 0)
+    if key == arcade.key.D:
+        setattr(character, 'change_x', 0)
+    if key == arcade.key.S:
+        setattr(character, 'change_y', 0)
 
 
 def on_mouse_press(x, y, button, modifiers):

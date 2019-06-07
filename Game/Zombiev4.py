@@ -8,16 +8,11 @@ SCREEN = "Main Menu"
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-# Change file path to appropriate one
-tile_img = arcade.load_texture('/home/robuntu/Downloads/download.jpeg')
 
 BTN_X = 0
 BTN_Y = 1
 BTN_WIDTH = 2
 BTN_HEIGHT = 3
-BTN_IS_CLICKED = 4
-BTN_COLOR = 5
-BTN_CLICKED_COLOR = 6
 
 
 def setup():
@@ -51,33 +46,17 @@ class MainScreen(object):
         # TITLE
         arcade.draw_text("ZombiE", self.x, HEIGHT - (1.6 * self.title_size), arcade.color.YELLOW, self.title_size)
         # START BUTTON
-        arcade.draw_xywh_rectangle_filled(newgame[BTN_X],
-                                          newgame[BTN_Y],
-                                          newgame[BTN_WIDTH],
-                                          newgame[BTN_HEIGHT],
-                                          color)
-
+        arcade.draw_xywh_rectangle_filled(self.x, self.y + 200, self.width, self.height, arcade.color.BATTLESHIP_GREY)
         arcade.draw_text("NEW  GAME", self.font_x - (25 / 8 * self.font_size), self.font_y + 200, arcade.color.BLACK,
                          self.font_size, font_name="TIMES NEW ROMAN")
-
         # CONTINUE BUTTON
         arcade.draw_xywh_rectangle_filled(self.x, self.y + 100, self.width, self.height, arcade.color.BATTLESHIP_GREY)
         arcade.draw_text(" CONTINUE ", self.font_x - (26 / 8 * self.font_size), self.font_y + 100, arcade.color.BLACK,
                          self.font_size, font_name="TIMES NEW ROMAN")
-
         # OPTIONS BUTTON
         arcade.draw_xywh_rectangle_filled(self.x, self.y, self.width, self.height, arcade.color.BATTLESHIP_GREY)
         arcade.draw_text("OPTIONS", self.font_x - (19 / 8 * self.font_size), self.font_y, arcade.color.BLACK,
                          self.font_size, font_name="TIMES NEW ROMAN")
-
-
-main_screen = MainScreen()
-newgame = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.height, False, arcade.color.BATTLESHIP_GREY, arcade.color.ORANGE]
-
-if newgame[BTN_IS_CLICKED]:
-    color = newgame[BTN_CLICKED_COLOR]
-else:
-    color = newgame[BTN_COLOR]
 
 
 class Background(object):
@@ -87,11 +66,14 @@ class Background(object):
         self.whole_map_width = WIDTH * 3
         self.whole_map_length = HEIGHT * 3
 
+        # Change file path to appropriate one
+        self.tile_img = arcade.load_texture('/home/robuntu/Hosseini/untitled/download.jpeg')
+
     def draw_background(self):
         # TILES
-        for x in range(self.whole_map_x, self.whole_map_x + self.whole_map_width, tile_img.width):
-            for y in range(self.whole_map_y, self.whole_map_y + self.whole_map_length, tile_img.height):
-                arcade.draw_xywh_rectangle_textured(x, y, tile_img.width, tile_img.height, tile_img)
+        for x in range(self.whole_map_x, self.whole_map_x + self.whole_map_width, self.tile_img.width):
+            for y in range(self.whole_map_y, self.whole_map_y + self.whole_map_length, self.tile_img.height):
+                arcade.draw_xywh_rectangle_textured(x, y, self.tile_img.width, self.tile_img.height, self.tile_img)
         # TREES
         # BUILDING
 
@@ -127,14 +109,16 @@ class Player(object):
     def update(self):
         self.x += self.change_x
         self.y += self.change_y
-        print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
+
 
 character = Player(400, 125, 20, 0, 0)
+main_screen = MainScreen()
+new_game = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.height]
 
 
 def update(delta_time):
     character.update()
-    print(getattr(character, 'change_y'))
+    print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
 
 
 def on_draw():
@@ -169,7 +153,14 @@ def on_key_release(key, modifiers):
     elif SCREEN == "Game":
         if key == arcade.key.ESCAPE:
             SCREEN = "Main Menu"
+
     if key == arcade.key.W:
+        setattr(character, 'change_y', 0)
+    if key == arcade.key.A:
+        setattr(character, 'change_x', 0)
+    if key == arcade.key.D:
+        setattr(character, 'change_x', 0)
+    if key == arcade.key.S:
         setattr(character, 'change_y', 0)
 
 
@@ -177,13 +168,9 @@ def on_mouse_press(x, y, button, modifiers):
     global SCREEN
     print(f"Click at ({x}, {y})")
 
-    if (x > newgame[BTN_X] and x < newgame[BTN_X] + newgame[BTN_WIDTH] and
-            y > newgame[BTN_Y] and y < newgame[BTN_Y] + newgame[BTN_HEIGHT]):
+    if (new_game[BTN_X] < x < new_game[BTN_X] + new_game[BTN_WIDTH] and
+            new_game[BTN_Y] < y < new_game[BTN_Y] + new_game[BTN_HEIGHT]):
         SCREEN = 'Game'
-
-
-def on_mouse_release(x, y, button, modifiers):
-    newgame[BTN_IS_CLICKED] = False
 
 
 if __name__ == '__main__':

@@ -119,6 +119,11 @@ new_game = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.h
 def update(delta_time):
     character.update()
     print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
+    if SCREEN == "Game":
+        arcade.set_viewport(-WIDTH / 2 + character.x,
+                            WIDTH / 2 + character.x,
+                            -HEIGHT / 2 + character.y,
+                            HEIGHT / 2 + character.y)
 
 
 def on_draw():

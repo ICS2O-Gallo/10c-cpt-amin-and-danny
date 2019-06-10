@@ -22,10 +22,13 @@ def setup():
     window.on_draw = on_draw
 
     arcade.run()
-    
+
 def update(delta_time):
     pass
 
 def on_draw():
     arcade.start_render()
     arcade.draw_xywh_rectangle_textured(100, 200, tile_img.width, tile_img.height, tile_img)
+    
+if __name__ == '__main__':
+    setup()

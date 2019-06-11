@@ -8,6 +8,7 @@ SCREEN = "Main Menu"
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
+background = arcade.load_texture('/home/robuntu/Downloads/download (2).jpeg')
 
 BTN_X = 0
 BTN_Y = 1
@@ -187,6 +188,9 @@ def on_draw():
         main_screen.draw_main_screen()
     elif SCREEN == "Game":
         game = Background()
+        for x in range(500, WIDTH, background.width):
+            for y in range(500, HEIGHT, background.height):
+                arcade.draw_xywh_rectangle_textured(375, 100, background.width + 350, background.height + 250, background)
         game.draw_background()
         character.draw_player()
         zombie_1.draw_player()

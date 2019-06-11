@@ -106,19 +106,77 @@ class Player(object):
         arcade.draw_xywh_rectangle_filled(self.x + self.width, self.y + self.height * 0.2, self.arm_width,
                                           self.height * 0.8, arcade.color.RED)
 
-    def update(self):
+    def player_movement(self):
         self.x += self.change_x
         self.y += self.change_y
 
 
 character = Player(400, 125, 20, 0, 0)
+
+
+class Zombie(object):
+    def __init__(self, x, y, width, change_x, change_y):
+        self.width = width
+        self.height = width * 2
+        self.height = width * 2
+        self.radius = width / 2
+        self.arm_width = width / 4
+        self.x = x
+        self.y = y
+        self.change_x = change_x
+        self.change_y = change_y
+
+    def draw_player(self):
+        # torso
+        arcade.draw_xywh_rectangle_filled(self.x, self.y, self.width, self.height, arcade.color.GREEN)
+        # head
+        arcade.draw_circle_filled(self.x + self.radius, self.y + self.height + self.radius, self.radius,
+                                  arcade.color.GREEN)
+        # legs
+        arcade.draw_xywh_rectangle_filled(self.x, self.y - self.height, self.radius - 1, self.height, arcade.color.GREEN)
+        arcade.draw_xywh_rectangle_filled(self.x + self.radius + 1, self.y - self.height, self.radius - 1, self.height,
+                                          arcade.color.GREEN)
+        # arms
+        arcade.draw_xywh_rectangle_filled(self.x - self.arm_width, self.y + self.height * 0.2, self.arm_width,
+                                          self.height * 0.8, arcade.color.RED)
+        arcade.draw_xywh_rectangle_filled(self.x + self.width, self.y + self.height * 0.2, self.arm_width,
+                                          self.height * 0.8, arcade.color.RED)
+
+    def follow_player(self, delta_time):
+        if getattr(character, 'x') > self.x:
+            self.change_x = 2
+        elif getattr(character, 'x') < self.x:
+            self.change_x = -2
+            
+        if getattr(character, 'y') > self.y:
+            self.change_y = 2
+        elif getattr(character, 'y') < self.y:
+            self.change_y = -2
+
+        if getattr(character, 'x') == self.x:
+            self.change_x = 0
+
+        if getattr(character, 'y') == self.y:
+            self.change_y = 0
+        self.x += self.change_x
+        self.y += self.change_y
+
+
+zombie_1 = Zombie(100, 100, 20, 0, 0)
 main_screen = MainScreen()
 new_game = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.height]
 
 
 def update(delta_time):
-    character.update()
-    print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
+    if SCREEN == "Game":
+        arcade.set_viewport(-WIDTH / 2 + character.x,
+                            WIDTH / 2 + character.x,
+                            -HEIGHT / 2 + character.y,
+                            HEIGHT / 2 + character.y)
+        character.player_movement()
+        print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
+        zombie_1.follow_player(1/60)
+        print(f"x:{getattr(zombie_1, 'change_x')}, y: {getattr(zombie_1, 'change_y')}")
 
 
 def on_draw():
@@ -131,6 +189,7 @@ def on_draw():
         game = Background()
         game.draw_background()
         character.draw_player()
+        zombie_1.draw_player()
 
 
 def on_key_press(key, modifiers):
@@ -156,11 +215,11 @@ def on_key_release(key, modifiers):
 
     if key == arcade.key.W:
         setattr(character, 'change_y', 0)
-    if key == arcade.key.A:
+    elif key == arcade.key.A:
         setattr(character, 'change_x', 0)
-    if key == arcade.key.D:
+    elif key == arcade.key.D:
         setattr(character, 'change_x', 0)
-    if key == arcade.key.S:
+    elif key == arcade.key.S:
         setattr(character, 'change_y', 0)
 
 

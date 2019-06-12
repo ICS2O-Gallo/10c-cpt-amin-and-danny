@@ -77,6 +77,9 @@ class Background(object):
                 arcade.draw_xywh_rectangle_textured(x, y, self.tile_img.width, self.tile_img.height, self.tile_img)
         # TREES
         # BUILDING
+        for x in range(500, WIDTH, background.width):
+            for y in range(500, HEIGHT, background.height):
+                arcade.draw_xywh_rectangle_textured(375, 100, background.width + 350, background.height + 250, background)
 
 
 class Player(object):
@@ -189,9 +192,6 @@ def on_draw():
     elif SCREEN == "Game":
         game = Background()
         game.draw_background()
-        for x in range(500, WIDTH, background.width):
-            for y in range(500, HEIGHT, background.height):
-                arcade.draw_xywh_rectangle_textured(375, 100, background.width + 350, background.height + 250, background)
         character.draw_player()
         zombie_1.draw_player()
 

@@ -1,5 +1,6 @@
 import os
 import arcade
+from math import floor
 
 WIDTH = 1300
 HEIGHT = 700
@@ -8,7 +9,7 @@ SCREEN = "Main Menu"
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-background = arcade.load_texture('/home/robuntu/Downloads/download (2).jpeg')
+background = arcade.load_texture('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/download.jpeg')
 
 BTN_X = 0
 BTN_Y = 1
@@ -79,7 +80,8 @@ class Background(object):
         # BUILDING
         for x in range(500, WIDTH, background.width):
             for y in range(500, HEIGHT, background.height):
-                arcade.draw_xywh_rectangle_textured(375, 100, background.width + 350, background.height + 250, background)
+                arcade.draw_xywh_rectangle_textured(375, 100, background.width + 350, background.height + 250,
+                                                    background)
 
 
 class Player(object):
@@ -93,29 +95,31 @@ class Player(object):
         self.y = y
         self.change_x = change_x
         self.change_y = change_y
+        self.color = arcade.color.YELLOW
+        self.health = 100
 
     def draw_player(self):
         # torso
-        arcade.draw_xywh_rectangle_filled(self.x, self.y, self.width, self.height, arcade.color.BLUE)
+        arcade.draw_xywh_rectangle_filled(self.x, self.y, self.width, self.height, self.color)
         # head
         arcade.draw_circle_filled(self.x + self.radius, self.y + self.height + self.radius, self.radius,
-                                  arcade.color.YELLOW)
+                                  self.color)
         # legs
         arcade.draw_xywh_rectangle_filled(self.x, self.y - self.height, self.radius - 1, self.height, arcade.color.RED)
         arcade.draw_xywh_rectangle_filled(self.x + self.radius + 1, self.y - self.height, self.radius - 1, self.height,
-                                          arcade.color.RED)
+                                          self.color)
         # arms
         arcade.draw_xywh_rectangle_filled(self.x - self.arm_width, self.y + self.height * 0.2, self.arm_width,
-                                          self.height * 0.8, arcade.color.RED)
+                                          self.height * 0.8, self.color)
         arcade.draw_xywh_rectangle_filled(self.x + self.width, self.y + self.height * 0.2, self.arm_width,
-                                          self.height * 0.8, arcade.color.RED)
+                                          self.height * 0.8, self.color)
 
     def player_movement(self):
         self.x += self.change_x
         self.y += self.change_y
 
 
-character = Player(400, 125, 20, 0, 0)
+character = Player(400, 100, 20, 0, 0)
 
 
 class Zombie(object):
@@ -137,7 +141,8 @@ class Zombie(object):
         arcade.draw_circle_filled(self.x + self.radius, self.y + self.height + self.radius, self.radius,
                                   arcade.color.GREEN)
         # legs
-        arcade.draw_xywh_rectangle_filled(self.x, self.y - self.height, self.radius - 1, self.height, arcade.color.GREEN)
+        arcade.draw_xywh_rectangle_filled(self.x, self.y - self.height, self.radius - 1, self.height,
+                                          arcade.color.GREEN)
         arcade.draw_xywh_rectangle_filled(self.x + self.radius + 1, self.y - self.height, self.radius - 1, self.height,
                                           arcade.color.GREEN)
         # arms
@@ -146,27 +151,35 @@ class Zombie(object):
         arcade.draw_xywh_rectangle_filled(self.x + self.width, self.y + self.height * 0.2, self.arm_width,
                                           self.height * 0.8, arcade.color.RED)
 
-    def follow_player(self, delta_time):
+    def follow_player(self):
         if getattr(character, 'x') > self.x:
             self.change_x = 2
         elif getattr(character, 'x') < self.x:
             self.change_x = -2
-            
+
         if getattr(character, 'y') > self.y:
             self.change_y = 2
         elif getattr(character, 'y') < self.y:
             self.change_y = -2
 
-        if getattr(character, 'x') == self.x:
+        if getattr(character, 'x') == self.x or getattr(character, 'x') == self.x -1 \
+                or getattr(character, 'x') == self.x + 1:
             self.change_x = 0
 
-        if getattr(character, 'y') == self.y:
+        if getattr(character, 'y') == self.y or getattr(character, 'y') == self.y -1 \
+                or getattr(character, 'y') == self.y + 1:
             self.change_y = 0
         self.x += self.change_x
         self.y += self.change_y
 
+    def zombie_attack(self, delta_time):
+        if getattr(character, 'x') == self.x and getattr(character, 'x') == self.x:
+            character.health -= 5 * delta_time
+            setattr(character, 'player_is_attacked', True)
+            setattr(character, 'player_is_attacked', False)
 
-zombie_1 = Zombie(100, 100, 20, 0, 0)
+
+zombie_1 = Zombie(100, 101, 20, 0, 0)
 main_screen = MainScreen()
 new_game = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.height]
 
@@ -178,9 +191,11 @@ def update(delta_time):
                             -HEIGHT / 2 + character.y,
                             HEIGHT / 2 + character.y)
         character.player_movement()
-        print(f"x:{getattr(character, 'change_x')}, y: {getattr(character, 'change_y')}")
-        zombie_1.follow_player(1/60)
+        zombie_1.follow_player()
+        zombie_1.zombie_attack(1/60)
         print(f"x:{getattr(zombie_1, 'change_x')}, y: {getattr(zombie_1, 'change_y')}")
+        print(f"Player:({getattr(character, 'x')},{getattr(character, 'y')}),Zombie:({getattr(zombie_1, 'x')},{getattr(zombie_1, 'y')})")
+        print(f"Player {getattr(character, 'health')} HP")
 
 
 def on_draw():
@@ -199,13 +214,13 @@ def on_draw():
 def on_key_press(key, modifiers):
     global character
     if key == arcade.key.W:
-        setattr(character, 'change_y', 5)
+        setattr(character, 'change_y', 6)
     elif key == arcade.key.A:
-        setattr(character, 'change_x', -5)
+        setattr(character, 'change_x', -6)
     elif key == arcade.key.D:
-        setattr(character, 'change_x', 5)
+        setattr(character, 'change_x', 6)
     elif key == arcade.key.S:
-        setattr(character, 'change_y', -5)
+        setattr(character, 'change_y', -6)
 
 
 def on_key_release(key, modifiers):

@@ -125,6 +125,8 @@ class Player(object):
         self.y += self.change_y
 
     def player_death(self):
+        global SCREEN
+        
         if self.health == 0:
             SCREEN = "Main Screen"
 

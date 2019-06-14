@@ -114,8 +114,9 @@ class Player(object):
     def player_death(self):
         global SCREEN
 
-        if self.health == 0:
-            SCREEN = "Main Screen"
+        if self.health <= 0:
+            SCREEN = "Main Menu"
+
 
 
 character = Player \
@@ -160,7 +161,8 @@ class Zombie(object):
     def zombie_attack(self, delta_time):
         if character.player_sprite.center_x == self.character_sprite.center_x \
                 and character.player_sprite.center_y == self.character_sprite.center_y:
-            character.health -= 5 * delta_time
+            if character.health > 0:
+                character.health -= 5 * delta_time
             setattr(character, 'player_is_attacked', True)
         else:
             setattr(character, 'player_is_attacked', False)
@@ -181,6 +183,7 @@ def update(delta_time):
         character.player_movement()
         zombie_1.follow_player()
         zombie_1.zombie_attack(1 / 60)
+        character.player_death()
         print(f"Player is attacked: {character.player_is_attacked}")
         print(f"Player {getattr(character, 'health')} HP")
 
@@ -189,6 +192,7 @@ def on_draw():
     arcade.start_render()
     # Draw in here...
     if SCREEN == "Main Menu":
+        arcade.set_viewport(0, WIDTH, 0, HEIGHT)
         arcade.set_background_color(arcade.color.WHITE)
         main_screen.draw_main_screen()
     elif SCREEN == "Game":

@@ -1,6 +1,6 @@
 import os
 import arcade
-from math import floor
+
 
 WIDTH = 1300
 HEIGHT = 700
@@ -9,7 +9,8 @@ SCREEN = "Main Menu"
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-background = arcade.load_texture('D:\Programs\c-cpt-amin-and-danny\Master\Assets\download(1).jpeg')
+background = arcade.load_texture \
+    ('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/download (2).jpeg')
 
 BTN_X = 0
 BTN_Y = 1
@@ -69,7 +70,8 @@ class Background(object):
         self.whole_map_length = HEIGHT * 3
 
         # Change file path to appropriate one
-        self.tile_img = arcade.load_texture('download.jpeg')
+        self.tile_img = arcade.load_texture \
+            ('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/download.jpeg')
 
     def draw_background(self):
         # TILES
@@ -85,53 +87,41 @@ class Background(object):
 
 
 class Player(object):
-    def __init__(self, x, y, width, change_x, change_y):
-        self.width = width
-        self.height = width * 2
-        self.height = width * 2
-        self.radius = width / 2
-        self.arm_width = width / 4
-        self.x = x
-        self.y = y
-        self.change_x = change_x
-        self.change_y = change_y
-        self.color = arcade.color.YELLOW
-        self.health = 100
+    def __init__(self, sprite, size, x, y):
+        self.player_sprite = arcade.Sprite(sprite, size)
+        self.player_sprite.center_x = x
+        self.player_sprite.center_y = y
+        self.player_sprite.change_x = 0
+        self.player_sprite.change_y = 0
         self.player_is_attacked = False
+        self.health = 100
 
-    def draw_player(self):
-        # torso
-        arcade.draw_xywh_rectangle_filled(self.x, self.y, self.width, self.height, self.color)
-        # head
-        arcade.draw_circle_filled(self.x + self.radius, self.y + self.height + self.radius, self.radius,
-                                  self.color)
-        # legs
-        arcade.draw_xywh_rectangle_filled(self.x, self.y - self.height, self.radius - 1, self.height, arcade.color.RED)
-        arcade.draw_xywh_rectangle_filled(self.x + self.radius + 1, self.y - self.height, self.radius - 1, self.height,
-                                          self.color)
-        # arms
-        arcade.draw_xywh_rectangle_filled(self.x - self.arm_width, self.y + self.height * 0.2, self.arm_width,
-                                          self.height * 0.8, self.color)
-        arcade.draw_xywh_rectangle_filled(self.x + self.width, self.y + self.height * 0.2, self.arm_width,
-                                          self.height * 0.8, self.color)
+    def draw(self):
+        self.player_sprite.draw()
         # health bar
         if self.player_is_attacked:
-            arcade.draw_xywh_rectangle_filled(self.x,  self.y + self.height + self.height, 100, 5, arcade.color.GREEN)
-            arcade.draw_xywh_rectangle_filled(self.x + self.health, self.y + self.height + self.height,
-                                              100 - self.health, 5, arcade.color.RED)
+            arcade.draw_xywh_rectangle_filled(self.player_sprite.center_x - (self.player_sprite.width / 4),
+                                              self.player_sprite.center_y + (self.player_sprite.height / 2),
+                                              100, 5, arcade.color.RED)
+            arcade.draw_xywh_rectangle_filled(self.player_sprite.center_x - (self.player_sprite.width / 4),
+                                              self.player_sprite.center_y + (self.player_sprite.height / 2),
+                                              self.health, 5, arcade.color.GREEN)
 
     def player_movement(self):
-        self.x += self.change_x
-        self.y += self.change_y
+        self.player_sprite.center_x += self.player_sprite.change_x
+        self.player_sprite.center_y += self.player_sprite.change_y
 
     def player_death(self):
         global SCREEN
-        
-        if self.health == 0:
-            SCREEN = "Main Screen"
+
+        if self.health <= 0:
+            SCREEN = "Main Menu"
 
 
-character = Player(400, 100, 20, 0, 0)
+
+character = Player \
+    ('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/pixil-frame-0(5).png',
+     2, 400, 100)
 
 
 class Zombie(object):
@@ -145,50 +135,55 @@ class Zombie(object):
     def draw(self):
         self.character_sprite.draw()
 
-
     def follow_player(self):
-        if getattr(character, 'x') > self.character_sprite.center_x:
+        if character.player_sprite.center_x > self.character_sprite.center_x:
             self.character_sprite.change_x = 2
-        elif getattr(character, 'x') < self.character_sprite.center_x:
+        elif character.player_sprite.center_x < self.character_sprite.center_x:
             self.character_sprite.change_x = -2
 
-        if getattr(character, 'y') > self.character_sprite.center_y:
+        if character.player_sprite.center_y > self.character_sprite.center_y:
             self.character_sprite.change_y = 2
-        elif getattr(character, 'y') < self.character_sprite.center_y:
+        elif character.player_sprite.center_y < self.character_sprite.center_y:
             self.character_sprite.change_y = -2
 
-        if getattr(character, 'x') == self.character_sprite.center_x or getattr(character, 'x') == self.character_sprite.center_x -1 \
-                or getattr(character, 'x') == self.character_sprite.center_x + 1:
+        if character.player_sprite.center_x == self.character_sprite.center_x \
+                or self.character_sprite.center_x == self.character_sprite.center_x - 1 \
+                or character.player_sprite.center_x == self.character_sprite.center_x + 1:
             self.character_sprite.change_x = 0
 
-        if getattr(character, 'y') == self.character_sprite.center_y or getattr(character, 'y') == self.character_sprite.center_y -1 \
-                or getattr(character, 'y') == self.character_sprite.center_y + 1:
+        if character.player_sprite.center_y == self.character_sprite.center_y \
+                or character.player_sprite.center_y == self.character_sprite.center_y - 1 \
+                or character.player_sprite.center_y == self.character_sprite.center_y + 1:
             self.character_sprite.change_y = 0
         self.character_sprite.center_x += self.character_sprite.change_x
         self.character_sprite.center_y += self.character_sprite.change_y
 
     def zombie_attack(self, delta_time):
-        if getattr(character, 'x') == self.character_sprite.center_x and getattr(character, 'y') == self.character_sprite.center_y:
-            character.health -= 5 * delta_time
+        if character.player_sprite.center_x == self.character_sprite.center_x \
+                and character.player_sprite.center_y == self.character_sprite.center_y:
+            if character.health > 0:
+                character.health -= 5 * delta_time
             setattr(character, 'player_is_attacked', True)
         else:
             setattr(character, 'player_is_attacked', False)
 
 
-zombie_1 = Zombie('D:\Programs\pixil-frame-0 (1).png', 2, 100, 200)
+zombie_1 = Zombie('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/pixil-frame'
+                  '-0 (1).png', 2, 100, 200)
 main_screen = MainScreen()
 new_game = [main_screen.x, main_screen.y + 200, main_screen.width, main_screen.height]
 
 
 def update(delta_time):
     if SCREEN == "Game":
-        arcade.set_viewport(-WIDTH / 2 + character.x,
-                            WIDTH / 2 + character.x,
-                            -HEIGHT / 2 + character.y,
-                            HEIGHT / 2 + character.y)
+        arcade.set_viewport(-WIDTH / 2 + character.player_sprite.center_x,
+                            WIDTH / 2 + character.player_sprite.center_x,
+                            -HEIGHT / 2 + character.player_sprite.center_y,
+                            HEIGHT / 2 + character.player_sprite.center_y)
         character.player_movement()
         zombie_1.follow_player()
-        zombie_1.zombie_attack(1/60)
+        zombie_1.zombie_attack(1 / 60)
+        character.player_death()
         print(f"Player is attacked: {character.player_is_attacked}")
         print(f"Player {getattr(character, 'health')} HP")
 
@@ -197,25 +192,26 @@ def on_draw():
     arcade.start_render()
     # Draw in here...
     if SCREEN == "Main Menu":
+        arcade.set_viewport(0, WIDTH, 0, HEIGHT)
         arcade.set_background_color(arcade.color.WHITE)
         main_screen.draw_main_screen()
     elif SCREEN == "Game":
         game = Background()
         game.draw_background()
-        character.draw_player()
+        character.draw()
         zombie_1.draw()
 
 
 def on_key_press(key, modifiers):
     global character
     if key == arcade.key.W:
-        setattr(character, 'change_y', 6)
+        character.player_sprite.change_y = 6
     elif key == arcade.key.A:
-        setattr(character, 'change_x', -6)
+        character.player_sprite.change_x = -6
     elif key == arcade.key.D:
-        setattr(character, 'change_x', 6)
+        character.player_sprite.change_x = 6
     elif key == arcade.key.S:
-        setattr(character, 'change_y', -6)
+        character.player_sprite.change_y = -6
 
 
 def on_key_release(key, modifiers):
@@ -227,14 +223,15 @@ def on_key_release(key, modifiers):
         if key == arcade.key.ESCAPE:
             SCREEN = "Main Menu"
 
+    # Look over this
     if key == arcade.key.W:
-        setattr(character, 'change_y', 0)
+        character.player_sprite.change_y = 0
     elif key == arcade.key.A:
-        setattr(character, 'change_x', 0)
+        character.player_sprite.change_x = 0
     elif key == arcade.key.D:
-        setattr(character, 'change_x', 0)
+        character.player_sprite.change_x = 0
     elif key == arcade.key.S:
-        setattr(character, 'change_y', 0)
+        character.player_sprite.change_y = 0
 
 
 def on_mouse_press(x, y, button, modifiers):

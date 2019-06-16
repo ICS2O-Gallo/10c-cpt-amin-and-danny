@@ -12,13 +12,12 @@ os.chdir(file_path)
 background = arcade.load_texture \
     ('/home/robuntu/Hosseini/classwork/CPT Game/10c-cpt-amin-and-danny-master/Master/Assets/download (2).jpeg')
 
-floor = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-00.png')
-left_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-01 (6).png')
-right_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-02 (6).png')
-upper_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-01.png')
-under_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-02.png')
+floor = arcade.load_texture(r'C:\Users\User\Desktop\cpt\floor.png')
+left_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\left wall.png')
+right_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\right wall.png')
+upper_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\upper wall.png')
+under_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\under wall.png')
 coner_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\coner wall.png')
-
 
 BTN_X = 0
 BTN_Y = 1

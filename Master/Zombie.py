@@ -17,6 +17,7 @@ left_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-01 (6).p
 right_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-02 (6).png')
 upper_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-01.png')
 under_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\pixil-frame-02.png')
+coner_wall = arcade.load_texture(r'C:\Users\User\Desktop\cpt\coner wall.png')
 
 
 BTN_X = 0
@@ -93,23 +94,44 @@ class Background(object):
         # Left wall
         for x in range(500, WIDTH, left_wall.width):
             for y in range(500, HEIGHT, left_wall.height):
-                arcade.draw_xywh_rectangle_textured(375 - 575, 100, left_wall.width + 350, left_wall.height + 250,
+                arcade.draw_xywh_rectangle_textured(375 - 125, 100, left_wall.width - 100, left_wall.height + 250,
                                                     left_wall)
         # Right wall
         for x in range(500, WIDTH, right_wall.width):
             for y in range(500, HEIGHT, right_wall.height):
-                arcade.draw_xywh_rectangle_textured(375 + 575, 100, right_wall.width + 350, right_wall.height + 250,
+                arcade.draw_xywh_rectangle_textured(375 + 575, 100, right_wall.width - 100, right_wall.height + 250,
                                                     right_wall)
         # Upper wall
         for x in range(500, WIDTH, upper_wall.width):
             for y in range(500, HEIGHT, upper_wall.height):
-                arcade.draw_xywh_rectangle_textured(375, 100 + 475, upper_wall.width + 350, upper_wall.height + 250,
+                arcade.draw_xywh_rectangle_textured(375, 100 + 475, upper_wall.width + 350, upper_wall.height - 120,
                                                     upper_wall)
         # Under wall
         for x in range(500, WIDTH, under_wall.width):
             for y in range(500, HEIGHT, under_wall.height):
-                arcade.draw_xywh_rectangle_textured(375, 100 - 475, under_wall.width + 350, under_wall.height + 250,
-                                                    under_wall)       
+                arcade.draw_xywh_rectangle_textured(375, 100 - 105, under_wall.width + 350, under_wall.height - 120,
+                                                    under_wall)
+        # Coner Wall (Upper left)
+        for x in range(500, WIDTH, coner_wall.width):
+            for y in range(500, HEIGHT, coner_wall.height):
+                arcade.draw_xywh_rectangle_textured(250, 100 + 475, coner_wall.width + 5, coner_wall.height - 15,
+                                                    coner_wall)
+        # Coner Wall (Upper right)
+        for x in range(500, WIDTH, coner_wall.width):
+            for y in range(500, HEIGHT, coner_wall.height):
+                arcade.draw_xywh_rectangle_textured(950, 100 + 475, coner_wall.width + 5, coner_wall.height - 15,
+                                                    coner_wall)
+        # Coner Wall (Under left)
+        for x in range(500, WIDTH, coner_wall.width):
+            for y in range(500, HEIGHT, coner_wall.height):
+                arcade.draw_xywh_rectangle_textured(250, 100 - 105, coner_wall.width + 5, coner_wall.height - 15,
+                                                    coner_wall)
+        # Coner Wall (Under right)
+        for x in range(500, WIDTH, coner_wall.width):
+            for y in range(500, HEIGHT, coner_wall.height):
+                arcade.draw_xywh_rectangle_textured(950, 100 - 105, coner_wall.width + 5, coner_wall.height - 15,
+                                                    coner_wall)
+        
 
 
 class Player(object):
